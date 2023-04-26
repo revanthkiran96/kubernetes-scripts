@@ -1,0 +1,31 @@
+export client=$(grep client-certificate ~/.kube/config | cut -d " " -f 6)
+export key=$(grep client-key ~/.kube/config | cut -d " " -f 6)
+export auth=$(grep certificate-authority ~/.kube/config | cut -d " " -f 6)
+
+base64 -w 0 /root/.minikube/profiles/minikube/client.crt | base64 -d - > client.pem 
+base64 -w 0 /root/.minikube/profiles/minikube/client.key | base64 -d - > client-key.pem
+base64 -w 0 /root/.minikube/ca.crt | base64 -d - > ca.pem
+kubectl config view | grep server
+
+curl --cert ./client.pem --key ./client-key.pem --cacert ./ca.pem https://192.168.49.2:8443/api/v1/pods
+
+openssl genrsa -out jaicluster.key 2048
+openssl req --new --key jaicluster.key --out jaicluster.csr --subj "/CN=jaicluster/O=staff"
+openssl x509 -req -in jaicluster.csr -CA ~/.minikube/ca.crt -CAkey ~/.minikube/ca.key -CAcreateserial -out jaicluster.crt -days 500
+kubectl config set-credentials jaicluster --client-certificate=./jaicluster.crt --client-key=./jaicluster.key
+kubectl config view
+kubectl config set-context jaicluster-context --cluster=minikube --namespace=staff --user=jaicluster
+kubectl --context=jaicluster-context get pods
+kubectl config get-contexts
+
+curl --cert ./client.pem --key ./client-key.pem --cacert ./ca.pem https://192.168.49.2:8443/api/v1/pods
+
+
+apk add --update curl
+curl https://kubernetes/api/v1
+curl https://kubernetes/api/v1 --insecure
+
+cd run/secrets/kubernetes.io/serviceaccount/
+TOKEN=$(cat /run/secrets/kubernetes.io/serviceaccount/token)
+curl -H "Authorization:Bearer $TOKEN" https://kubernetes/api/v1 -k
+
