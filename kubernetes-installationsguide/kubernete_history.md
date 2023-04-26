@@ -1,0 +1,89 @@
+eksctl version
+eksctl
+eksctl create cluster --name revanth  --region ap-northeast-1 --node-type t2.small
+kubectl get pods
+kubectl get nodes
+kubectl describe nodes ip-192-168-48-63.ap-northeast-1.compute.internal
+ping localhost
+kubectl run pod revanth --image=nginx
+kubectl get pods
+kubectl describe pod pod
+kubectl edit pod pod
+kubectl describe pod pod
+kubectl run pod bittu --image=tomcat
+kubectl run  bittu --image=tomcat
+kubectl get pods
+kubectl describe pod bittu
+kubectl get pods
+kubectl delete pod bittu
+kubectl delete pod pod
+history
+kubectl run pod bittu --image=tomcat
+cd /usr/local/bin/
+kubectl get pods
+kubectl describe pod pod
+kubectl delete pod
+kubectl get pods
+kubectl delete pod pod
+kubectl run revanth --image=nginx
+kubectl get pods
+kubectl expose pod revanth --port=8000 --target-port=80 --type=NodePort
+kubectl expose --help
+kubectl get pods
+kubectl expose pod revanth --port=8000 --target-port=80 --type=NodePort
+kubectl get pods -n kube-system
+kubectl cluster-info
+kubectl get pods -n kube-system -o wide
+kubectl get pods
+kubectl port
+kubectl port-forword 8888:80
+kubectl port-forword  revanth 8888:80
+kubectl port-forward  revanth 8888:80
+curl http://localhost:8888
+kubectl api-resources
+kubectl completion -h (to auto complete the command)
+kubectl auth can-i create pod (to check the user can create pod or not) 
+kubectl proxy --port=8001 &
+curl http://localhost:8001/version
+kubectl explain
+kubectl run nginx --image=nginx --dry-run=client -o yaml
+kubectl get pod -n revanth(namespace)
+kubectl config set-context --current --namespace=revanth  (#namespce switching)
+kubectl create quota qtest --hard pods=4,cpu=100,memory=500Mi -n revanth (quota allocating)
+kubectl describe quota -n revanth
+kubctl rollout history deploy deployment-name --revision=1
+kubectl set pod or kubectl edit pod
+kubectl rollout undo deploy deployment-name
+kubectl rollout undo deploy deployment-name --to-revision=1 (to rollback more than one previous version)
+kubectl exec -it nginx-web-7fc79595fb-9sr6m -- cat /etc/resolv.conf
+minikube enable ingress
+minikube addons ingress
+minikube addons enable ingress
+kubectl get pods -n ingress-nginx
+kubectl scale deploy nginxsvc --replicas=3
+kubectl expose deploy nginxsvc --port=80 --taget-port=80
+kubectl get ep
+kubectl get po
+minikube addons enable metallb(minikube local loadbalancer)
+minikube addons configure metallb(ip ranges must be in minikube ip range)
+minikube ip
+curl http://$(minikube ip):32407
+kubectl get po,ep
+kubectl create ing nginxsvc-ing --rule="/=nginxsvc:80"
+sudo vi /etc/hosts (to add local dns)
+kubectl create ing multihost(ing name) --rule="dev-k8s.com/=dev:80" --rule="test-k8s.com/=test:80"(multi sub-domain routing)
+kubectl logs pod-name(to check the pod logs at functioning level)
+kubectl set -h
+kubectl set env deploy myb MYSQL_ROOT_PASSWORD=password
+kubectl create cm mydbvars --from-env-file=varsfile  (create configmaps with file)
+kubectl set env deploy mydb --from=configmap/mydbvars
+kubectl create secret generic dbpw --from-literal=ROOT_PASSWORD=password
+echo cGFzc3dvcmQ= | base64 -d (decoding the seckret key)
+kubectl set env deploy mynewdb --from=secret/dbpw --prefix=MYSQL_
+kubectl exec mynewdb-59fdcbdf55-pp7qm -- env
+kubectl create secret docker-registry my-secret --docker-server=https://index.docker.io/v1/ --docker-username=revanthkiran --docker-password='C@@!rb!96++u56' --docker-email=thatthari1996@gmail.com (adding secret for docker credentials)
+kubectl label nodes i-03dacd3853dfef8fa company=revanth (adding labels to nodes)
+kubectl get no --show-labels |grep -i company=revanth
+kubectl taint nodes i-03dacd3853dfef8fa example-key=value:NoSchedule (taint creation for node)
+
+
